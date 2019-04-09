@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post
 {
@@ -20,11 +23,16 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * Assert\Length(min = 3, max = 255,
+     * minMessage="Your post title must be at least {{ limit }} characters",
+     * maxMessage="Your post title can't be more than {{ limit }} characters")
      */
     private $Title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $Content;
 
@@ -40,6 +48,7 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Slug(fields={"Title"})
      */
     private $slug;
 
@@ -69,10 +78,28 @@ class Post
      */
     private $Category;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
     public function __construct()
     {
         $this->Comments = new ArrayCollection();
         $this->Tags = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setDates(): void
+    {
+        $this->setDateModified(new \DateTime('now'));
+        if ($this->getDateCreated() === null) {
+            $this->setDateCreated(new \DateTime('now'));
+        }
     }
 
     public function getId(): ?int
@@ -231,6 +258,18 @@ class Post
     public function setCategory(?Category $Category): self
     {
         $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
 
         return $this;
     }

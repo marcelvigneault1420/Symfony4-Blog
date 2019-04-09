@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
+
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <title>{% block title %}My Blog!{% endblock %}</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> {% block stylesheets %}{% endblock %}
     </head>
+
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <div class="container">
+            <header>
+                <nav>
+                    <ul>
+                        <li><a href="{{ path('blog_index') }}">Home</a></li> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
+                        <li><a href="{{ path('user_logout') }}">Logout from {{ app.user.email }}</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
+                    </ul>
+                </nav>
+            </header> {% block body %}{% endblock %}
+        </div> {% block javascripts %}{% endblock %}
     </body>
+
 </html>

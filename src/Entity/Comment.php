@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -18,6 +20,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $Content;
 
@@ -37,9 +40,27 @@ class Comment
      */
     private $Post;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $User;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setDates(): void
+    {
+        $this->setDateModified(new \DateTime('now'));
+        if ($this->getDateCreated() === null) {
+            $this->setDateCreated(new \DateTime('now'));
+        }
     }
 
     public function getContent(): ?string
@@ -86,6 +107,18 @@ class Comment
     public function setPost(?Post $Post): self
     {
         $this->Post = $Post;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(?User $User): self
+    {
+        $this->User = $User;
 
         return $this;
     }
