@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %} {% block stylesheets %} <style>
+    .invalid-feedback {
+        color: red;
+    }
+
+    .badge-danger {
+        background-color: red;
+    }
+</style> {% endblock %} {% block body %} <h2> Create a post </h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<input type="submit" class="btn" value="Create" />
+{{ form_end(form) }} {% endblock %}

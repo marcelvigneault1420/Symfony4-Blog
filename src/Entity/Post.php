@@ -23,16 +23,13 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * Assert\Length(min = 3, max = 255,
-     * minMessage="Your post title must be at least {{ limit }} characters",
-     * maxMessage="Your post title can't be more than {{ limit }} characters")
+     * @Assert\NotBlank(message="Title can't be empty")
      */
     private $Title;
 
     /**
      * @ORM\Column(type="text")
-     * @Assert\NotBlank
+     * @Assert\NotBlank(message="Content can't be empty")
      */
     private $Content;
 
@@ -75,6 +72,8 @@ class Post
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="Posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid
+     * @Assert\NotBlank(message="Please select a category")
      */
     private $Category;
 

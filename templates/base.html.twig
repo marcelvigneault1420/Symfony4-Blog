@@ -13,6 +13,7 @@
                 <nav>
                     <ul>
                         <li><a href="{{ path('blog_index') }}">Home</a></li> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
+                        <li><a href="{{ path('blog_add') }}">Create a post</a></li>
                         <li><a href="{{ path('user_logout') }}">Logout from {{ app.user.email }}</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
                     </ul>
                 </nav>
