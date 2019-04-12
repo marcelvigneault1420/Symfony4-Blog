@@ -22,19 +22,28 @@ class PostRepository extends ServiceEntityRepository
     // /**
     //  * @return Post[] Returns an array of Post objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function getAllPosted()
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('p.User', 'u')
+            ->addSelect('u')
+            ->andWhere('p.IsPosted = 1')
+            ->orderBy('p.DatePosted', 'Desc')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function getPostWithUser($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.User', 'u')
+            ->addSelect('u')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Post

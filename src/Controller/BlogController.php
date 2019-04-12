@@ -18,8 +18,9 @@ class BlogController extends AbstractController
      */
     public function index()
     {
+        $listPosts = $this->getDoctrine()->getRepository(Post::class)->getAllPosted();
         return $this->render('blog/index.html.twig', [
-            'controller_name' => 'BlogController',
+            'listPosts' => $listPosts,
         ]);
     }
 
@@ -44,7 +45,7 @@ class BlogController extends AbstractController
                 if ($isDraft == false) {
                     $post->setDatePosted(new \DateTime('now'));
                 }
-                $post->setIsPosted($isDraft);
+                $post->setIsPosted($isDraft == false);
                 $em->persist($post);
                 $em->flush();
 
@@ -64,7 +65,7 @@ class BlogController extends AbstractController
     public function post($id)
     {
         if ($id > 0) {
-            $post = $this->getDoctrine()->getRepository(Post::class)->findOneById($id);
+            $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
 
             if ($post) {
                 return $this->render('blog/post.html.twig', ['post' => $post]);

@@ -8,17 +8,34 @@
     </head>
 
     <body>
-        <div class="container">
-            <header>
-                <nav>
-                    <ul>
-                        <li><a href="{{ path('blog_index') }}">Home</a></li> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
-                        <li><a href="{{ path('blog_add') }}">Create a post</a></li>
-                        <li><a href="{{ path('user_logout') }}">Logout from {{ app.user.email }}</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
-                    </ul>
-                </nav>
-            </header> {% block body %}{% endblock %}
-        </div> {% block javascripts %}{% endblock %}
+        <header>
+            <h1>My blog</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ path('blog_index') }}">Home</a></li> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
+                    <li><a href="{{ path('blog_add') }}">Create a post</a></li>
+                    <li><a href="{{ path('user_logout') }}">Logout from {{ app.user.email }}</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <main class="container">{% block body %}{% endblock %}</main>
+        <footer>
+            <section id="footer_links">
+                <ul>
+                    <li><a href="{{ path('blog_index') }}">Home</a></li>
+                    <li><a href="https://github.com/marcelvigneault1420/Symfony4-Blog">About this website</a></li>
+                    <li><a href="https://github.com/marcelvigneault1420/Symfony4-Blog">Website github repository</a></li>
+                </ul>
+            </section>
+            <section id="footer_about">
+                <div id="footer_socials">
+                    <a href="https://github.com/marcelvigneault1420">GitHub</a>
+                    <a href="mailto:marcel.vigneault.1420@gmail.com">Mail</a>
+                    <a href="https://www.linkedin.com/in/charles-vigneault-5641908a/">LinkedIn</a>
+                </div>
+                <p>© 2019 Marcel Vigneault</p>
+            </section>
+        </footer> {% block javascripts %}{% endblock %}
     </body>
 
 </html>
