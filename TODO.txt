@@ -1,1 +1,11 @@
 Tags many to many in form
+Heart
+Login/Register view CSS
+Being able to see your unpost posts and post them
+delete a post
+Follow someone
+Comment
+Ajax to see only one follower post
+Having line max number and if it's exceded you have a ::after and a fade out like patreon
+Order post by popularity
+Having a view count

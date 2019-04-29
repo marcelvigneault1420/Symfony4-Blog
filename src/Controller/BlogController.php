@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Post;
 use App\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/blog", name="blog_")
@@ -16,9 +17,9 @@ class BlogController extends AbstractController
     /**
      * @Route("", name="index")
      */
-    public function index()
+    public function index(AuthorizationCheckerInterface $authChecker)
     {
-        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $listPosts = $this->getDoctrine()->getRepository(Post::class)->getAllPosted();
             return $this->render('blog/index.html.twig', [
                 'listPosts' => $listPosts,
@@ -31,9 +32,9 @@ class BlogController extends AbstractController
     /**
      * @Route("/add", name="add")
      */
-    public function add(Request $request)
+    public function add(Request $request, AuthorizationCheckerInterface $authChecker)
     {
-        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $post = new Post();
             $form = $this->createForm(PostType::class, $post);
 
