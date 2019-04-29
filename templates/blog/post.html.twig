@@ -1,16 +1,24 @@
-{% extends "base.html.twig" %} {% block body %}
-<article>
-    <h3>
-        {{ post.Title }}
-    </h3>
-    <p id="post_content">
-        {{ post.Content | nl2br }}
-    </p>
-    <div id="post_information">
-        <i>
-            {{ post.DatePosted | date('Y-m-d H:m') }}
-        </i>
-        <p>{{ post.User.DisplayName }}</p>
-    </div>
-<article>
-{% endblock %}
+{% extends "base.html.twig" %} {% block body %} <main class="single-post-wrapper">
+    <article>
+        <h3>
+            <a href="{{ path('blog_post', {'id': post.id}) }}">{{ post.Title }}</a>
+        </h3>
+        <p class="post-content">
+            {{ post.Content | nl2br }}
+        </p>
+        <div class="post-information">
+            <div class="hearts"> ❤ 0 </div>
+            <i>
+                {{ post.DatePosted | date('Y-m-d H:m') }}
+            </i>
+        </div>
+    </article>
+    <aside>
+        <div class="aside-wrapper">
+            <div class="profile">
+                <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="75" height="75" alt="">
+                <h3>{{ post.user.DisplayName }}</h3>
+            </div>
+        </div>
+    </aside>
+</main> {% endblock %}

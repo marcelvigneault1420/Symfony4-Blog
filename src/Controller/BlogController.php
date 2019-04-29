@@ -18,10 +18,14 @@ class BlogController extends AbstractController
      */
     public function index()
     {
-        $listPosts = $this->getDoctrine()->getRepository(Post::class)->getAllPosted();
-        return $this->render('blog/index.html.twig', [
-            'listPosts' => $listPosts,
-        ]);
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            $listPosts = $this->getDoctrine()->getRepository(Post::class)->getAllPosted();
+            return $this->render('blog/index.html.twig', [
+                'listPosts' => $listPosts,
+            ]);
+        } else {
+            return $this->redirectToRoute('user_login');
+        }
     }
 
     /**
@@ -29,34 +33,38 @@ class BlogController extends AbstractController
      */
     public function add(Request $request)
     {
-        $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            $post = new Post();
+            $form = $this->createForm(PostType::class, $post);
 
-        $form->handleRequest($request);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $post = $form->getData();
-            $agreeTerms = $form->get('agreeTerms')->getData();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $post = $form->getData();
+                $agreeTerms = $form->get('agreeTerms')->getData();
 
-            if ($agreeTerms) {
-                $em = $this->getDoctrine()->getManager();
-                $post->setUser($this->getUser());
-                $isDraft = $form->get('isDraft')->getData();
-                if ($isDraft == false) {
-                    $post->setDatePosted(new \DateTime('now'));
+                if ($agreeTerms) {
+                    $em = $this->getDoctrine()->getManager();
+                    $post->setUser($this->getUser());
+                    $isDraft = $form->get('isDraft')->getData();
+                    if ($isDraft == false) {
+                        $post->setDatePosted(new \DateTime('now'));
+                    }
+                    $post->setIsPosted($isDraft == false);
+                    $em->persist($post);
+                    $em->flush();
+
+                    return $this->redirectToRoute('blog_post', ['id' => $post->getId()]);
+                } else {
+                    $error = new FormError("Please agree the terms");
+                    $form->get('agreeTerms')->addError($error);
                 }
-                $post->setIsPosted($isDraft == false);
-                $em->persist($post);
-                $em->flush();
-
-                return $this->redirectToRoute('blog_post', ['id' => $post->getId()]);
-            } else {
-                $error = new FormError("Please agree the terms");
-                $form->get('agreeTerms')->addError($error);
             }
-        }
 
-        return $this->render('blog/add.html.twig', array('form' => $form->createView()));
+            return $this->render('blog/add.html.twig', array('form' => $form->createView()));
+        } else {
+            return $this->redirectToRoute('user_login');
+        }
     }
 
     /**
