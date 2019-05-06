@@ -9,3 +9,7 @@ Ajax to see only one follower post
 Having line max number and if it's exceded you have a ::after and a fade out like patreon
 Order post by popularity
 Having a view count
+Following and the AJAX. The see all or see only followings
+If there's no post, show something like "Follow people to see something and maybe having the all selected by default.
+Add a bio
+Permettre d'avoir une liste des usagers automatique lors de la recherche en AJAX comme Facebook.

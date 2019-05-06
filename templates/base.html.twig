@@ -13,10 +13,13 @@
             <header>
                 <a href="{{ path('blog_index') }}">community Blog</a>
                 <nav>
-                    <ul>
-                        <li><a href="{{ path('blog_index') }}">Home</a></li> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
-                        <li class="split-li"></li>
-                        <li><a href="{{ path('blog_add') }}">Create a post</a></li>
+                    <ul> {% if is_granted('IS_AUTHENTICATED_FULLY') %} <li><a href="{{ path('user_profile', {'id': app.user.id }) }}">Profile</a></li>
+                        <li class="split-li">
+                            <form action="{{ path('user_list') }}" class="search-form" method="GET">
+                                <input name="search-bar-field" type="text" placeholder="Search"><button type="submit"><i>&#9906;</i></button>
+                            </form>
+                        </li>
+                        <li><a href="{{ path('blog_add') }}">Post</a></li>
                         <li><a href="{{ path('user_logout') }}">Logout</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
                     </ul>
                 </nav>

@@ -2,8 +2,12 @@
     <aside>
         <div class="aside-wrapper">
             <div class="profile">
-                <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="75" height="75" alt="">
-                <h3>{{ app.user.DisplayName }}</h3>
+                <a href="{{ path('user_profile', {'id': app.user.id }) }}">
+                    <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="75" height="75" alt="">
+                </a>
+                <h3>
+                    <a href="{{ path('user_profile', {'id': app.user.id }) }}">{{ app.user.DisplayName }}</a>
+                </h3>
             </div>
             <div class="following-list">
                 <h4> Following </h4>
@@ -13,31 +17,15 @@
     </aside>
     <div class="feed-view">
         <section class="filters">
-            <button class="button-selected">All posts</button>
+            <button class="button-selected">Following posts</button>
+            <button class="">All posts</button>
             <select name="order-by" id="order-by">
                 <option value="date-new">Date posted | Newest</option>
                 <option value="date-old">Date posted | Oldest</option>
                 <option value="popularity">Most popular</option>
             </select>
         </section>
-        <section class="posts"> {% for post in listPosts %} <article>
-                <div class="post-author">
-                    <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="30" height="30" alt="">
-                    <p>{{ post.User.DisplayName }}</p>
-                </div>
-                <h3>
-                    <a href="{{ path('blog_post', {'id': post.id}) }}">{{ post.Title }}</a>
-                </h3>
-                <p class="post-content">
-                    {{ post.Content | nl2br }}
-                </p>
-                <div class="post-information">
-                    <div class="hearts"> ❤ 0 </div>
-                    <i>
-                        {{ post.DatePosted | date('Y-m-d H:m') }}
-                    </i>
-                </div>
-            </article> {% else %} <article>
+        <section class="posts"> {% for post in listPosts %} {{ include('blog/_article.html.twig', { 'post': post, 'hideUser': false }) }} {% else %} <article>
                 <p>No ad found</p>
             </article> {% endfor %} </section>
     </div>

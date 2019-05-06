@@ -1,20 +1,11 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello UserController!{% endblock %}
-
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/HP/Code/Web/PHP/Symfony/Symfony4-Blog/src/Controller/UserController.php'|file_link(0) }}">src/Controller/UserController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/HP/Code/Web/PHP/Symfony/Symfony4-Blog/templates/user/index.html.twig'|file_link(0) }}">templates/user/index.html.twig</a></code></li>
-    </ul>
-</div>
-{% endblock %}
+{% extends 'base.html.twig' %} {% block title %}Hello UserController!{% endblock %} {% block body %} <main class="user-search">
+    <h1><span class="search-title">Search:</span> <span class="search-text">{{ searchText }}</span> </h1> {% for user in userList %} <div class="profile">
+        <a href="{{ path('user_profile', {'id': user.id }) }}">
+            <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="110" height="110" alt="">
+        </a>
+        <div class="profile-info">
+            <a href="{{ path('user_profile', {'id': user.id }) }}">{{ user.DisplayName }}</a>
+            <p>{{ user.email }}</p>
+        </div>
+    </div> {% endfor %}
+</main> {% endblock %}

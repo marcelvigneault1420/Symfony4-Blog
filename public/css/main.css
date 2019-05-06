@@ -1,7 +1,10 @@
 :root {
     --main-purple: #ba68c8;
+    --main-purple-dark: #a201be;
+    --main-purple-darker: #79008f;
     --main-purple-light: #f3ddf8;
     --main-sand: #ffff88;
+    --gray-border: 1px solid #ccc;
 }
 
 *,
@@ -35,8 +38,8 @@ html {
 
 header {
     display: grid;
-    grid-template-columns: auto 1fr;
-    border-bottom: 1px solid #ccc;
+    grid-template-columns: max-content 1fr;
+    border-bottom: var(--gray-border);
 }
 
 header>a {
@@ -66,10 +69,10 @@ nav ul {
 }
 
 nav a {
-    padding: 10px 10px;
+    padding: 10px 8px;
     display: block;
     font-size: 1.7rem;
-    margin: 0 10px;
+    margin: 0 8px;
 }
 
 nav a:hover,
@@ -80,6 +83,45 @@ nav a:focus {
 
 .split-li {
     flex: 1;
+}
+
+.split-li form {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+}
+
+.split-li input[type=text] {
+    border: none;
+    font-size: 17px;
+    padding: 5px 34px 5px 12px;
+    margin: 5px 4px;
+    grid-column: 1/span 2;
+    grid-row: 1/span 1;
+    background: rgb(240, 240, 240);
+    border-radius: 15px;
+}
+
+.split-li input[type=text]:focus,
+.split-li button:focus {
+    outline: none;
+}
+
+.split-li button {
+    width: 100%;
+    grid-column: 2/-1;
+    grid-row: 1/span 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+.split-li button i {
+    font-weight: bold;
+    font-size: 2.5rem;
+    transform: translateY(-5px) rotate(-55deg);
+    display: block;
 }
 
 .page-wrapper {
@@ -123,12 +165,16 @@ nav a:focus {
 
 .single-post-wrapper article {
     padding-top: 10px;
+    grid-template-rows: auto 1fr auto;
 }
 
 aside .aside-wrapper {
-    border: 1px solid #ccc;
+    border: var(--gray-border);
     border-radius: 5px;
     padding-bottom: 10px;
+}
+
+aside .following-element {
     cursor: pointer;
 }
 
@@ -143,7 +189,6 @@ aside .aside-wrapper {
 
 .profile img {
     margin: 20px;
-    padding-top: 10px;
 }
 
 .profile-picture {
@@ -178,16 +223,17 @@ aside .aside-wrapper {
 }
 
 .filters button {
-    padding: 0 20px;
+    padding: 0 15px;
     background: none;
     border: none;
+    margin-right: 10px;
 }
 
 .filters .button-selected {
     border-bottom: 1px solid black;
 }
 
-.feed-view .filters>*:nth-child(2) {
+.feed-view .filters>*:last-child {
     margin-left: auto;
     padding: 0 10px;
 }
@@ -200,41 +246,38 @@ aside .aside-wrapper {
 }
 
 article {
-    border: 1px solid #ccc;
-    padding: 20px 20px 10px 20px;
+    border: var(--gray-border);
+    padding: 10px 20px;
     border-radius: 5px;
     display: grid;
     align-content: start;
-    grid-template-rows: 40px auto auto auto;
 }
 
 article .post-author {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    align-items: center;
+    display: flex;
     font-size: 1.3em;
-    grid-gap: 10px;
+    height: 40px;
+    align-items: center;
+    align-content: center;
 }
 
-article img {
-    padding-top: 4px;
+.post-author span {
+    padding-left: 10px;
 }
 
-article a {
-    border-bottom: 1px solid #ccc;
-    padding: 20px 0 10px 0;
+article .post-title {
+    border-bottom: var(--gray-border);
+    padding: 5px 0 5px 0;
     display: block;
 }
 
 article .post-content {
-    padding: 20px 0px;
+    padding: 10px 0;
 }
 
 article .post-information {
     display: flex;
 }
-
-article .post-information {}
 
 .post-information div:nth-child(1) {
     flex: 1;
@@ -245,7 +288,7 @@ footer {
     grid-template-columns: minmax(200px, 300px) minmax(200px, 300px) minmax(200px, 300px);
     justify-content: center;
     height: 150px;
-    border-top: 1px solid #ccc;
+    border-top: var(--gray-border);
     padding: 30px;
 }
 
@@ -293,6 +336,74 @@ footer .footer-links ul {
 
 .footer-social li {
     padding: 5px 5px;
+}
+
+.user-page,
+.user-search {
+    width: 90%;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.user-page h2 {
+    padding-top: 10px;
+}
+
+.user-page article {
+    margin-top: 20px;
+}
+
+.user-search h1 {
+    padding-top: 20px;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+h1 .search-title {
+    font-weight: bold;
+}
+
+.user-search .profile {
+    border: var(--gray-border);
+    border-radius: 5px;
+    display: grid;
+    align-items: stretch;
+    justify-content: stretch;
+    grid-template-columns: 150px 1fr;
+    grid-template-rows: 150px;
+}
+
+.user-search .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.profile-info a {
+    font-size: 1.5em;
+    padding-top: 20px;
+}
+
+.profile a,
+.profile a:visited,
+.profile a h3 {
+    color: var(--main-purple-dark);
+}
+
+.profile a:hover,
+.profile a h3:hover {
+    color: var(--main-purple-darker);
+}
+
+.profile-info p {}
+
+.post-author a span {
+    color: var(--main-purple-dark);
+}
+
+.post-author a span:hover {
+    color: var(--main-purple-darker);
 }
 
 @media only screen and (max-width: 750px) {

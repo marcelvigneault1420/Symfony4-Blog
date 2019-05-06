@@ -1,0 +1,18 @@
+<article> {% if hideUser == false %} <div class="post-author">
+        <a href="{{ path('user_profile', {'id': post.User.id }) }}">
+            <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="30" height="30" alt="">
+            <span>{{ post.User.DisplayName }}</span>
+        </a>
+    </div> {% endif %} <h3>
+        <a class="post-title" href="{{ path('blog_post', {'id': post.id}) }}">{{ post.Title }}</a>
+    </h3>
+    <p class="post-content">
+        {{ post.Content | nl2br }}
+    </p>
+    <div class="post-information">
+        <div class="hearts"> ❤ 0 </div>
+        <i>
+            {{ post.DatePosted | date('Y-m-d H:i') }}
+        </i>
+    </div>
+</article>

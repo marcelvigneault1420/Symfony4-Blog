@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/user", name="user_")
@@ -15,10 +17,16 @@ class UserController extends AbstractController
     /**
      * @Route("", name="list")
      */
-    public function list()
+    public function list(Request $request)
     {
+        $searchText = $request->query->get('search-bar-field');
+
+        $userList = $this->getDoctrine()->getRepository(User::class)->searchUser($searchText);
+
+
         return $this->render('user/list.html.twig', [
-            'controller_name' => 'UserController',
+            'userList' => $userList,
+            'searchText' => $searchText,
         ]);
     }
 
@@ -56,7 +64,9 @@ class UserController extends AbstractController
      */
     public function profile($id)
     {
-        return $this->render('user/profile.html.twig', ['user' => $id]);
+        $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($id);
+
+        return $this->render('user/profile.html.twig', ['user' => $user]);
     }
 
     /**
