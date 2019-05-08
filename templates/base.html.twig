@@ -20,7 +20,7 @@
                             </form>
                         </li>
                         <li><a href="{{ path('blog_add') }}">Post</a></li>
-                        <li><a href="{{ path('user_logout') }}">Logout</a></li> {% else %} <li><a href="{{ path('user_login') }}">Login</a></li> {% endif %}
+                        <li><a href="{{ path('user_logout') }}">Logout</a></li> {% else %} {% if (app.request.pathinfo == '/login') %} <li><a href="{{ path('register_user') }}">Register</a></li> {% else %} <li><a href="{{ path('login') }}">Login</a></li> {% endif %} {% endif %}
                     </ul>
                 </nav>
             </header> {% block body %}{% endblock %} <footer>

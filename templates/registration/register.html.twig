@@ -1,5 +1,8 @@
-{% extends 'base.html.twig' %} {% block title %}Register{% endblock %} {% block body %} <h1>Register</h1>
-{{ form_start(registrationForm) }}
-{{ form_row(registrationForm.email) }}{{ form_row(registrationForm.plainPassword) }}{{ form_row(registrationForm.displayName) }}
-<button class="btn">Register</button>
+{% extends 'base.html.twig' %} {% block title %}Register{% endblock %} {% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/login.css') }}"> {% endblock %} {% block body %} <main class="log-reg register-wrapper">
+    <h1>Register</h1>
+    {{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.email) }}{{ form_row(registrationForm.plainPassword) }}{{ form_row(registrationForm.displayName) }}
+    <button class="btn btn-lg btn-primary">Register</button>
+</main>
 {{ form_end(registrationForm) }} {% endblock %}

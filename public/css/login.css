@@ -1,0 +1,30 @@
+.log-reg {
+    width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.log-reg form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+}
+
+.log-reg h1 {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 20px;
+}
+
+.register-wrapper button {
+    margin-top: 5px;
+}
+
+.log-reg>p {
+    margin-top: 10px;
+}
+
+.log-reg .form-group {
+    margin: 0;
+}

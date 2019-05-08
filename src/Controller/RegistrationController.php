@@ -11,43 +11,64 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * @Route("/register", name="register_")
+ * @Route("", name="")
  */
 class RegistrationController extends AbstractController
 {
     /**
-     * @Route("", name="user")
+     * @Route("/login", name="login")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, BlogAuthenticator $authenticator): Response
+    public function login(AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('blog_index');
+        } else {
+            $error = $authenticationUtils->getLastAuthenticationError();
+            $lastUsername = $authenticationUtils->getLastUsername();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
         }
+    }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+    /**
+     * @Route("/register", name="register_user")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, BlogAuthenticator $authenticator, AuthorizationCheckerInterface $authChecker): Response
+    {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('blog_index');
+        } else {
+            $user = new User();
+            $form = $this->createForm(RegistrationFormType::class, $user);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $guardHandler->authenticateUserAndHandleSuccess(
+                    $user,
+                    $request,
+                    $authenticator,
+                    'main' // firewall name in security.yaml
+                );
+            }
+
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
+        }
     }
 }

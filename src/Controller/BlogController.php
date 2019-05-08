@@ -25,7 +25,7 @@ class BlogController extends AbstractController
                 'listPosts' => $listPosts,
             ]);
         } else {
-            return $this->redirectToRoute('user_login');
+            return $this->redirectToRoute('login');
         }
     }
 
@@ -64,7 +64,7 @@ class BlogController extends AbstractController
 
             return $this->render('blog/add.html.twig', array('form' => $form->createView()));
         } else {
-            return $this->redirectToRoute('user_login');
+            return $this->redirectToRoute('login');
         }
     }
 
