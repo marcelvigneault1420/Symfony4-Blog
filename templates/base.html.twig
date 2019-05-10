@@ -41,7 +41,32 @@
                     <p>© 2019 Marcel Vigneault</p>
                 </section>
             </footer>
-        </div> {% block javascripts %}{% endblock %}
+        </div>
+        <script src="{{ asset('script/main.js') }}"></script> {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <script>
+            let followButtons = document.querySelectorAll('.follow-button');
+
+            followButtons.forEach((btn) => {
+                btn.addEventListener('click', ({ currentTarget: button }) => {
+                    const idUser = button.value;
+
+                    fetch("{{ path('user_follow') }}", {
+                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                        method: 'POST',
+                        body: JSON.stringify({
+                            idFollow: idUser,
+                        }),
+                    })
+                        .then(({ status }) => {
+                            if (status == 200) {
+                                console.log('Success');
+                            } else {
+                                console.log('Error creating the user');
+                            }
+                        })
+                });
+            });
+        </script> {% endif %} {% block javascripts %}{% endblock %}
     </body>
 
 </html>

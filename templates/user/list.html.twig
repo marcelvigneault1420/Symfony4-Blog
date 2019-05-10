@@ -7,5 +7,6 @@
             <a href="{{ path('user_profile', {'id': user.id }) }}">{{ user.DisplayName }}</a>
             <p>{{ user.email }}</p>
         </div>
+        <button class="my-button follow-button" value="{{ user.id }}">Follow</button>
     </div> {% endfor %}
 </main> {% endblock %}

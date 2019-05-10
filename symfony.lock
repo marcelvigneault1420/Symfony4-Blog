@@ -123,6 +123,9 @@
     "nikic/php-parser": {
         "version": "v4.2.1"
     },
+    "ocramius/package-versions": {
+        "version": "1.4.0"
+    },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
@@ -385,6 +388,9 @@
             "./config/packages/test/routing.yaml",
             "./config/routes.yaml"
         ]
+    },
+    "symfony/security": {
+        "version": "v4.2.8"
     },
     "symfony/security-bundle": {
         "version": "3.3",
