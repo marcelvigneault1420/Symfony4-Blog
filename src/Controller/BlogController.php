@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use App\Service\UserHelper;
 
 /**
  * @Route("/blog", name="blog_")
@@ -69,15 +70,15 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/post/{id<\d>}", name="post")
+     * @Route("/post/{id<\d+>}", name="post")
      */
-    public function post($id)
+    public function post($id, UserHelper $userHelper)
     {
         if ($id > 0) {
             $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
 
-            if ($post) {
-                return $this->render('blog/post.html.twig', ['post' => $post]);
+            if ($post && $post->getIsPosted()) {
+                return $this->render('blog/post.html.twig', ['post' => $post, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $post->getUser())]);
             }
         }
 

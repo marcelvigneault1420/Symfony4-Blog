@@ -4,9 +4,10 @@
             <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="110" height="110" alt="">
         </a>
         <div class="profile-info">
-            <a href="{{ path('user_profile', {'id': user.id }) }}">{{ user.DisplayName }}</a>
+            <a href="{{ path('user_profile', {'id': user.id }) }}">{{ user.display_name }}</a>
             <p>{{ user.email }}</p>
-        </div>
-        <button class="my-button follow-button" value="{{ user.id }}">Follow</button>
+        </div> {% if user.id != app.user.id %} <div class="follow-button-wrapper">
+            <button class="my-button follow-button" value="{{ user.id }}">{% if user.user_target == null %} Follow {% else %} Unfollow {% endif %}</button>
+        </div> {% endif%}
     </div> {% endfor %}
 </main> {% endblock %}

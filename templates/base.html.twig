@@ -57,11 +57,42 @@
                             idFollow: idUser,
                         }),
                     })
-                        .then(({ status }) => {
-                            if (status == 200) {
-                                console.log('Success');
+                        .then((resp) => {
+                            if (resp.status == 200) {
+                                resp.json().then((isFollow) => {
+                                    let anim = button.animate([
+                                        { transform: 'translateZ(0) rotateX(0deg)' },
+                                        { transform: 'translateZ(200px) rotateX(-90deg)' },
+                                    ], {
+                                            duration: 500,
+                                            iterations: 1,
+                                            direction: 'alternate',
+                                            fill: 'forwards',
+                                        });
+
+                                    anim.onfinish = () => {
+                                        if (isFollow) {
+                                            button.innerHTML = 'Unfollow';
+                                        } else {
+                                            button.innerHTML = 'Follow';
+                                        }
+
+                                        button.animate([
+                                            { transform: 'translateZ(200px) rotateX(90deg)' },
+                                            { transform: 'translateZ(0) rotateX(0deg)' },
+                                        ],
+                                            {
+                                                duration: 500,
+                                                iterations: 1,
+                                                direction: 'alternate',
+                                                fill: 'forwards',
+                                            });
+                                    };
+                                });
                             } else {
-                                console.log('Error creating the user');
+                                resp.json().then((errorLog) => {
+                                    console.log(errorLog);
+                                });
                             }
                         })
                 });

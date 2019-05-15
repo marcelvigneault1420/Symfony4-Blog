@@ -26,24 +26,31 @@ class UserRepository extends ServiceEntityRepository
     public function getUserWithPosts($id)
     {
         return $this->createQueryBuilder('u')
-            ->innerJoin('u.posts', 'p')
+            ->leftJoin('u.posts', 'p')
             ->addSelect('p')
             ->andWhere('u.id = :id')
-            ->andWhere('p.IsPosted = true')
             ->orderBy('p.DatePosted', 'DESC')
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function searchUser($name)
+    public function searchUser($name, $idCurrUser)
     {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = 'SELECT * FROM User U LEFT JOIN User_user F ON F.user_target = U.id AND F.user_source = :iduser WHERE display_name LIKE :name';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array('name' => '%' . $name . '%', 'iduser' => $idCurrUser));
+        return $stmt->fetchAll();
+        die;
+        /*
         return $this->createQueryBuilder('u')
             ->andWhere('u.DisplayName LIKE :name')
             ->setParameter('name', '%' . $name . '%')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult();
+            ->getResult(); */
     }
 
     /*

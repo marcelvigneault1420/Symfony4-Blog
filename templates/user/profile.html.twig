@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %} {% block title %}Hello UserController!{% endblock %} {% block body %} <main class="user-page">
     <div class="profile">
         <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="75" height="75" alt="">
-        <h3>{{ user.DisplayName }}</h3>
+        <h3>{{ user.DisplayName }}</h3> {% if user.id != app.user.id %} <div class="follow-button-wrapper">
+            <button class="my-button follow-button" value="{{ user.id }}">{% if isFollowing %} Unfollow {% else %} Follow {% endif %}</button>
+        </div> {% endif%}
     </div>
     <h2>Recent posts</h2>
     <div class="user-posts-wrap">{% for post in user.posts %} {{ include('blog/_article.html.twig', { 'post': post, 'hideUser': true }) }} {% endfor %}</div>

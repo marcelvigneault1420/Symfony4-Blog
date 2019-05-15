@@ -8,8 +8,9 @@
                 </a>
                 <a href="{{ path('user_profile', {'id': post.user.id }) }}">
                     <h3>{{ post.user.DisplayName }}</h3>
-                </a>
-            </div>
+                </a> {% if post.user.id != app.user.id %} <div class="follow-button-wrapper">
+                    <button class="my-button follow-button" value="{{ post.user.id }}">{% if isFollowing %} Unfollow {% else %} Follow {% endif %}</button>
+                </div> {% endif%} </div>
         </div>
     </aside>
 </main> {% endblock %}

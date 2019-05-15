@@ -385,9 +385,15 @@ h1 .search-title {
     padding-top: 20px;
 }
 
+.follow-button-wrapper {
+    display: grid;
+    perspective: 1000px;
+}
+
 .my-button {
     justify-self: center;
     align-self: start;
+    width: 120px;
     padding: 5px 15px;
     margin: 10px 5px;
     border: 4px solid var(--main-purple);
@@ -418,7 +424,7 @@ h1 .search-title {
 
 .my-button:hover::before {
     transform: skew(-25deg) translateX(150px);
-    transition: all 1.2s ease-in-out;
+    transition: all 0.8s ease-in-out;
 }
 
 .profile a,

@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use App\Service\UserHelper;
 
 /**
  * @Route("/user", name="user_")
@@ -22,8 +24,7 @@ class UserController extends AbstractController
     {
         $searchText = $request->query->get('search-bar-field');
 
-        $userList = $this->getDoctrine()->getRepository(User::class)->searchUser($searchText);
-
+        $userList = $this->getDoctrine()->getRepository(User::class)->searchUser($searchText, $this->getUser()->getId());
 
         return $this->render('user/list.html.twig', [
             'userList' => $userList,
@@ -36,24 +37,49 @@ class UserController extends AbstractController
      */
     public function follow(Request $request, LoggerInterface $logger)
     {
-        if ($request->getContentType() == 'json' && $request->getContent()) {
-            $jsonResponse = json_decode($request->getContent(), true);
+        try {
+            if ($request->getContentType() == 'json' && $request->getContent()) {
+                $jsonResponse = json_decode($request->getContent(), true);
 
-            if (count($jsonResponse) > 0 && array_key_exists('idFollow', $jsonResponse)) {
-                $idFollow = intval($jsonResponse["idFollow"]);
-                $idUser = $this->getUser()->getId();
+                if (count($jsonResponse) > 0 && array_key_exists('idFollow', $jsonResponse)) {
+                    $idFollow = intval($jsonResponse["idFollow"]);
 
-                $logger->info('UserId:' . $idUser . 'FollowId:' . $idFollow);
+                    if ($this->getUser()->getId() != $idFollow) {
+                        $flws = $this->getUser()->getFollowers();
+                        $toFollow = $this->getDoctrine()->getRepository(User::class)->findOneById($idFollow);
 
-                return new JsonResponse(
-                    'success',
-                    JsonResponse::HTTP_OK
-                );
+                        if ($toFollow != null) {
+                            $isAdded = false;
+                            if ($flws->contains($toFollow)) {
+                                $this->getUser()->removeFollower($toFollow);
+                                $isAdded = false;
+                            } else {
+                                $this->getUser()->addFollower($toFollow);
+                                $isAdded = true;
+                            }
+
+                            $em = $this->getDoctrine()->getManager();
+                            $em->persist($this->getUser());
+                            $em->flush();
+
+                            return new JsonResponse(
+                                $isAdded,
+                                JsonResponse::HTTP_OK,
+                            );
+                        }
+                    }
+                }
             }
+        } catch (\Throwable $th) {
+            $logger->info($th->getMessage());
+            return new JsonResponse(
+                'error',
+                JsonResponse::HTTP_BAD_REQUEST
+            );
         }
 
         return new JsonResponse(
-            'error',
+            'Wrong user',
             JsonResponse::HTTP_BAD_REQUEST
         );
     }
@@ -75,17 +101,17 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profile/{id<\d>}", name="profile")
+     * @Route("/profile/{id<\d+>}", name="profile")
      */
-    public function profile($id)
+    public function profile($id, UserHelper $userHelper)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($id);
 
-        return $this->render('user/profile.html.twig', ['user' => $user]);
+        return $this->render('user/profile.html.twig', ['user' => $user, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $user)]);
     }
 
     /**
-     * @Route("/grantAdmin/{id<\d>}", name="grant_admin")
+     * @Route("/grantAdmin/{id<\d+>}", name="grant_admin")
      */
     public function grantAdmin($id)
     {
