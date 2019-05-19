@@ -2,7 +2,7 @@
     --main-purple: #ba68c8;
     --main-purple-dark: #a201be;
     --main-purple-darker: #79008f;
-    --main-purple-light: #f3ddf8;
+    --main-purple-light: #f0cbf7;
     --main-sand: #ffff88;
     --gray-border: 1px solid #ccc;
 }
@@ -30,6 +30,11 @@ a:focus {
     box-sizing: inherit;
     text-decoration: none;
     color: black;
+}
+
+button:active,
+button:focus {
+    outline: none;
 }
 
 html {
@@ -133,9 +138,9 @@ nav a:focus {
 
 .index-wrapper {
     display: grid;
-    grid-template-columns: minmax(250px, 2fr) 5fr;
+    grid-template-columns: minmax(250px, 2fr) 6fr;
     width: 90%;
-    max-width: 1200px;
+    max-width: 1400px;
     grid-gap: 20px;
     margin: 0 auto;
 }
@@ -155,7 +160,7 @@ nav a:focus {
 
 .single-post-wrapper {
     display: grid;
-    grid-template-columns: 5fr minmax(250px, 2fr);
+    grid-template-columns: 6fr minmax(250px, 2fr);
     align-content: start;
     width: 90%;
     max-width: 1150px;
@@ -172,10 +177,6 @@ aside .aside-wrapper {
     border: var(--gray-border);
     border-radius: 5px;
     padding-bottom: 10px;
-}
-
-aside .following-element {
-    cursor: pointer;
 }
 
 .profile {
@@ -196,8 +197,12 @@ aside .following-element {
     background-color: var(--main-purple-light);
 }
 
+.following-list {
+    padding: 0 10px;
+}
+
 .following-list h4 {
-    padding: 10px;
+    padding: 10px 0;
 }
 
 .following-element {
@@ -206,16 +211,29 @@ aside .following-element {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: none;
+    border: none;
+    border-bottom: var(--gray-border);
+}
+
+.following-element:last-child {
+    border: none;
 }
 
 .following-element:hover {
-    background-color: #eee;
+    background-color: var(--main-purple-light);
+}
+
+.following-list>.button-selected {
+    background-color: var(--main-purple);
+    color: white;
 }
 
 .feed-view {
     display: grid;
     grid-template-rows: 50px auto;
     grid-gap: 20px;
+    overflow: hidden;
 }
 
 .feed-view .filters {
@@ -230,7 +248,7 @@ aside .following-element {
 }
 
 .filters .button-selected {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--main-purple);
 }
 
 .feed-view .filters>*:last-child {
@@ -448,7 +466,56 @@ h1 .search-title {
     color: var(--main-purple-darker);
 }
 
-@media only screen and (max-width: 750px) {
+.loading-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loading {
+    border: 10px solid #ccc;
+    border-top: 10px solid var(--main-purple);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    animation: rotation 1.5s linear infinite;
+}
+
+.loading-text {
+    color: var(--main-purple);
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+.animate-in {
+    opacity: 0;
+    animation: animate-in 0.6s forwards ease-out;
+}
+
+@keyframes animate-in {
+    from {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media only screen and (max-width: 775px) {
     * {
         background-color: #0F0;
     }

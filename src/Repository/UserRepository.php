@@ -29,6 +29,7 @@ class UserRepository extends ServiceEntityRepository
             ->leftJoin('u.posts', 'p')
             ->addSelect('p')
             ->andWhere('u.id = :id')
+            ->andWhere('p.IsPosted = true')
             ->orderBy('p.DatePosted', 'DESC')
             ->setParameter('id', $id)
             ->getQuery()

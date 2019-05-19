@@ -45,6 +45,19 @@ class PostRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getUserPosts($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.User', 'u')
+            ->addSelect('u')
+            ->andWhere('u.id = :id')
+            ->andWhere('p.IsPosted = 1')
+            ->setParameter('id', $id)
+            ->orderBy('p.DatePosted', 'Desc')
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Post
     {

@@ -1,0 +1,3 @@
+{% for post in listPosts %} {{ include('blog/_article.html.twig', { 'post': post, 'hideUser': false }) }} {% else %} <article>
+    <p>No post found</p>
+</article> {% endfor %}
