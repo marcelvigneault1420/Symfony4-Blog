@@ -58,10 +58,14 @@ followButtons.forEach((btn) => {
     });
 });
 
-let ddmButtons = document.querySelectorAll('.ddm-button');
+function runButtonsEvent() {
+    let ddmButtons = document.querySelectorAll('.ddm-button');
 
-ddmButtons.forEach((btn) => {
-    btn.addEventListener('click', ({ currentTarget: button }) => {
-        button.parentNode.querySelector('ul').classList.toggle('ddm-show');
+    ddmButtons.forEach((btn) => {
+        btn.addEventListener('click', ({ currentTarget: button }) => {
+            button.parentNode.querySelector('ul').classList.toggle('ddm-show');
+        });
     });
-});
+}
+
+runButtonsEvent();

@@ -104,11 +104,16 @@ class UserController extends AbstractController
      */
     public function profile($id, UserHelper $userHelper)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($id, false);
+        $posts = null;
+
+        $posts = $this->getDoctrine()->getRepository(Post::class)->getUserPosts($id);
+
+        $selectedUser = $this->getDoctrine()->getRepository(User::class)->findOneById($id);
 
         return $this->render('user/profile.html.twig', [
-            'user' => $user,
-            'isFollowing' => $userHelper->isFollowing($this->getUser(), $user),
+            'user' => $selectedUser,
+            'isFollowing' => $userHelper->isFollowing($this->getUser(), $selectedUser),
+            'posts' => $posts,
             'isDraft' => false
         ]);
     }
@@ -119,9 +124,11 @@ class UserController extends AbstractController
     public function drafts()
     {
         $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($this->getUser()->getId(), true);
+        $posts = $this->getDoctrine()->getRepository(Post::class)->getDraftPosts($this->getUser()->getId());
 
         return $this->render('user/profile.html.twig', [
             'user' => $user,
+            'posts' => $posts,
             'isDraft' => true
         ]);
     }

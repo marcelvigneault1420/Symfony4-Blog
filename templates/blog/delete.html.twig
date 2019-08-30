@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %} {% block title %}Delete a post!{% endblock %} {% block body %} <main class="user-page">
+    <div class="delete-post">
+        <h3>Delete a post</h3>
+        <p class="delete-post-p">Are you sure you want to delete the post "{{ postTitle }}"</p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}<input type="submit" class="btn" value="Delete" /><a href="{{ path('blog_post', {'id': idPost}) }}">Cancel</a>
+        {{ form_end(form) }}
+    </div> {% endblock %}

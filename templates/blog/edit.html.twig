@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %} {% use "form/blog.html.twig" %} {% block stylesheets %} <style>
+    .invalid-feedback {
+        color: red;
+    }
+
+    .badge-danger {
+        background-color: red;
+    }
+</style> {% endblock %} {% block body %} <main class="form-wrapper">
+    <h2> Edit a post </h2> {% block form_body %} {{ parent() }} {% endblock %}
+</main> {% endblock %} {% block javascripts %} {{ parent() }}
+{{ block('form_javascript') }} {% endblock %}

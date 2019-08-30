@@ -48,6 +48,7 @@ function refreshFollower() {
         if (resp.status === 200) {
             resp.json().then(({ htmlview }) => {
                 drawPosts(anim, articlesContainer, htmlview.split('<article>').join('<article class="animate-in">'));
+                runButtonsEvent();
             }, (error) => {
                 drawPosts(anim, articlesContainer);
             });

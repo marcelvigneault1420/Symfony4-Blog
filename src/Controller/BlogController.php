@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\Service\UserHelper;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -73,19 +74,124 @@ class BlogController extends AbstractController
     }
 
     /**
+     * @Route("/edit/{id<\d+>}", name="edit")
+     */
+    public function edit($id, Request $request, AuthorizationCheckerInterface $authChecker)
+    {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            if ($id > 0) {
+                $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
+
+                if ($post && ($post->getUser()->getId() == $this->getUser()->getId())) {
+                    $form = $this->createForm(PostType::class, $post)->remove('isDraft');
+
+                    $form->handleRequest($request);
+
+                    if ($form->isSubmitted() && $form->isValid()) {
+                        $post = $form->getData();
+                        $agreeTerms = $form->get('agreeTerms')->getData();
+
+                        if ($agreeTerms) {
+                            $em = $this->getDoctrine()->getManager();
+                            $post->setUser($this->getUser());
+                            $em->persist($post);
+                            $em->flush();
+
+                            return $this->redirectToRoute('blog_post', ['id' => $post->getId()]);
+                        } else {
+                            $error = new FormError("Please agree the terms");
+                            $form->get('agreeTerms')->addError($error);
+                        }
+                    } else {
+                        return $this->render('blog/edit.html.twig', array('form' => $form->createView()));
+                    }
+                }
+            }
+
+            return $this->redirectToRoute('blog_index');
+        } else {
+            return $this->redirectToRoute('login');
+        }
+    }
+
+    /**
+     * @Route("/delete/{id<\d+>}", name="delete")
+     */
+    public function delete($id, Request $request, AuthorizationCheckerInterface $authChecker)
+    {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            if ($id > 0) {
+                $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
+
+                if ($post && ($post->getUser()->getId() == $this->getUser()->getId())) {
+
+                    $form = $this->createFormBuilder(array('id' => $id))->add('id', HiddenType::class)->getForm();
+
+                    $form->handleRequest($request);
+
+                    if ($form->isSubmitted() && $form->isValid()) {
+                        $em = $this->getDoctrine()->getManager();
+                        $em->remove($post);
+                        $em->flush();
+
+                        return $this->redirectToRoute('blog_index');
+                    }
+
+                    return $this->render('blog/delete.html.twig', ['idPost' => $post->getId(), 'postTitle' => $post->getTitle(), 'form' => $form->createView()]);
+                }
+            }
+
+            return $this->redirectToRoute('blog_index');
+        } else {
+            return $this->redirectToRoute('login');
+        }
+    }
+
+    /**
      * @Route("/post/{id<\d+>}", name="post")
      */
-    public function post($id, UserHelper $userHelper)
+    public function post($id, UserHelper $userHelper, AuthorizationCheckerInterface $authChecker)
     {
-        if ($id > 0) {
-            $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            if ($id > 0) {
+                $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
 
-            if ($post && ($post->getUser()->getId() == $this->getUser()->getId() || $post->getIsPosted())) {
-                return $this->render('blog/post.html.twig', ['post' => $post, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $post->getUser())]);
+                if ($post && ($post->getUser()->getId() == $this->getUser()->getId() || $post->getIsPosted())) {
+                    return $this->render('blog/post.html.twig', ['post' => $post, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $post->getUser())]);
+                }
             }
-        }
 
-        return $this->redirectToRoute('blog_index');
+            return $this->redirectToRoute('blog_index');
+        } else {
+            return $this->redirectToRoute('login');
+        }
+    }
+
+    /**
+     * @Route("/publish/{id<\d+>}", name="publish")
+     */
+    public function publish($id, UserHelper $userHelper, AuthorizationCheckerInterface $authChecker)
+    {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            if ($id > 0) {
+                $post = $this->getDoctrine()->getRepository(Post::class)->getPostWithUser($id);
+
+                if ($post && ($post->getUser()->getId() == $this->getUser()->getId())) {
+                    $em = $this->getDoctrine()->getManager();
+                    $post->setIsPosted(true);
+                    $em->persist($post);
+                    $em->flush();
+                }
+
+                if ($post && ($post->getUser()->getId() == $this->getUser()->getId() || $post->getIsPosted())) {
+                    return $this->render('blog/post.html.twig', ['post' => $post, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $post->getUser())]);
+                }
+            }
+
+            return $this->redirectToRoute('blog_index');
+        } else {
+            return $this->redirectToRoute('login');
+        }
     }
 
     /**

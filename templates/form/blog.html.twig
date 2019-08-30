@@ -1,17 +1,9 @@
-{% block form_body %}
-	{{ form_start(form) }}
-
-        {{ form_widget(form) }}
-
-
-		<input type="submit" class="btn" value="Create" />
-	{{ form_end(form) }}
-{% endblock %}
-
-{% block form_javascript %}
-    <script type="text/javascript">
+{% block form_body %} {{ form_start(form) }}
+{{ form_widget(form) }}
+<input type="submit" class="btn" value="Submit" />
+{{ form_end(form) }} {% endblock %} {% block form_javascript %}
+<script type="text/javascript">
     function test1() {
 
     }
-    </script>
-{% endblock %}
+</script> {% endblock %}

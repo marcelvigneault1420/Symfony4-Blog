@@ -307,10 +307,16 @@ article .ddm-wrapper {
 
 .ddm-show {
     display: block;
-    background-color: var(--main-purple-light);
+    background-color: rgb(250, 250, 250);
     border-radius: 10px;
     animation: animate-in 0.4s forwards ease-out;
     transform-origin: top right;
+}
+
+.ddm-button {
+    background: none;
+    border: none;
+    font-weight: bold;
 }
 
 .post-author span {
@@ -536,6 +542,19 @@ h1 .search-title {
 .post-type li {
     padding: 10px 20px;
     font-size: 1.3em;
+}
+
+.delete-post {
+    margin-bottom: 20px;
+}
+
+.delete-post a {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.delete-post-p {
+    padding: 10px 0;
 }
 
 @keyframes animate-in {
