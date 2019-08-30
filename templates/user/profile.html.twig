@@ -4,7 +4,9 @@
         <h3>{{ user.DisplayName }}</h3> {% if user.id != app.user.id %} <div class="follow-button-wrapper">
             <button class="my-button follow-button" value="{{ user.id }}">{% if isFollowing %} Unfollow {% else %} Follow {% endif %}</button>
         </div> {% endif%}
-    </div>
-    <h2>Recent posts</h2>
+    </div> {% if user.id == app.user.id %} <ul class="post-type"> {% if isDraft == false %} <li class="follower-button button-selected"><a href="{{ path('user_profile', {'id': app.user.id }) }}">Your posts</a></li>
+        <li class="follower-button"><a href="{{ path('user_drafts') }}">Your drafts</a></li> {% else %} <li class="follower-button"><a href="{{ path('user_profile', {'id': app.user.id }) }}">Your posts</a></li>
+        <li class="follower-button button-selected"><a href="{{ path('user_drafts') }}">Your drafts</a></li> {% endif %}
+    </ul> {% endif %} <h2>Recent posts</h2>
     <div class="user-posts-wrap">{% for post in user.posts %} {{ include('blog/_article.html.twig', { 'post': post, 'hideUser': true }) }} {% endfor %}</div>
 </main> {% endblock %}

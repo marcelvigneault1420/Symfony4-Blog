@@ -247,7 +247,8 @@ aside .aside-wrapper {
     margin-right: 10px;
 }
 
-.filters .button-selected {
+.filters .button-selected,
+.post-type .button-selected {
     border-bottom: 1px solid var(--main-purple);
 }
 
@@ -269,6 +270,7 @@ article {
     border-radius: 5px;
     display: grid;
     align-content: start;
+    position: relative;
 }
 
 article .post-author {
@@ -277,6 +279,38 @@ article .post-author {
     height: 40px;
     align-items: center;
     align-content: center;
+}
+
+article .ddm-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.ddm {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    list-style-type: none;
+    display: none;
+    padding: 0;
+    transform-origin: top right;
+}
+
+.ddm .ddm-item {
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ddm-show {
+    display: block;
+    background-color: var(--main-purple-light);
+    border-radius: 10px;
+    animation: animate-in 0.4s forwards ease-out;
+    transform-origin: top right;
 }
 
 .post-author span {
@@ -491,6 +525,17 @@ h1 .search-title {
 .animate-in {
     opacity: 0;
     animation: animate-in 0.6s forwards ease-out;
+}
+
+.post-type {
+    display: flex;
+    list-style: none;
+    justify-content: space-around;
+}
+
+.post-type li {
+    padding: 10px 20px;
+    font-size: 1.3em;
 }
 
 @keyframes animate-in {

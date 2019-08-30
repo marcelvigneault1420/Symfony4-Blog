@@ -1,4 +1,11 @@
-<article> {% if hideUser == false %} <div class="post-author">
+<article> {% if post.User.id == app.user.id %} <div class="ddm-wrapper">
+        <button class="ddm-button">+</button>
+        <ul class="ddm">
+            <li class="ddm-item ddmitem1">Post</li>
+            <li class="ddm-item ddmitem2">Edit</li>
+            <li class="ddm-item ddmitem3">Delete</li>
+        </ul>
+    </div> {% endif %} {% if hideUser == false %} <div class="post-author">
         <a href="{{ path('user_profile', {'id': post.User.id }) }}">
             <img class="profile-picture" src="{{ asset('img/avatar-placeholder.png') }}" width="30" height="30" alt="">
             <span>{{ post.User.DisplayName }}</span>

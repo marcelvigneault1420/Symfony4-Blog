@@ -58,6 +58,17 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getDraftPosts($id)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.idUser = :id')
+            ->andWhere('p.IsPosted = 0')
+            ->setParameter('id', $id)
+            ->orderBy('p.id', 'Desc')
+            ->getQuery()
+            ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Post
     {

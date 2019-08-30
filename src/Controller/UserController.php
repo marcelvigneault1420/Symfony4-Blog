@@ -8,9 +8,8 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use App\Service\UserHelper;
+use App\Entity\Post;
 
 /**
  * @Route("/user", name="user_")
@@ -105,9 +104,26 @@ class UserController extends AbstractController
      */
     public function profile($id, UserHelper $userHelper)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($id);
+        $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($id, false);
 
-        return $this->render('user/profile.html.twig', ['user' => $user, 'isFollowing' => $userHelper->isFollowing($this->getUser(), $user)]);
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+            'isFollowing' => $userHelper->isFollowing($this->getUser(), $user),
+            'isDraft' => false
+        ]);
+    }
+
+    /**
+     * @Route("/profile/drafts", name="drafts")
+     */
+    public function drafts()
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->getUserWithPosts($this->getUser()->getId(), true);
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+            'isDraft' => true
+        ]);
     }
 
     /**

@@ -23,15 +23,16 @@ class UserRepository extends ServiceEntityRepository
     //  * @return User[] Returns an array of User objects
     //  */
 
-    public function getUserWithPosts($id)
+    public function getUserWithPosts($id, $isPosted)
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.posts', 'p')
             ->addSelect('p')
             ->andWhere('u.id = :id')
-            ->andWhere('p.IsPosted = true')
+            ->andWhere('p.IsPosted = :isPosted')
             ->orderBy('p.DatePosted', 'DESC')
             ->setParameter('id', $id)
+            ->setParameter('isPosted', $isPosted)
             ->getQuery()
             ->getOneOrNullResult();
     }

@@ -43,60 +43,10 @@
             </footer>
         </div> {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <script>
-            let followButtons = document.querySelectorAll('.follow-button');
-
-            followButtons.forEach((btn) => {
-                btn.addEventListener('click', ({ currentTarget: button }) => {
-                    const idUser = button.value;
-
-                    fetch("{{ path('user_follow') }}", {
-                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-                        method: 'POST',
-                        body: JSON.stringify({
-                            idFollow: idUser,
-                        }),
-                    })
-                        .then((resp) => {
-                            if (resp.status == 200) {
-                                resp.json().then((isFollow) => {
-                                    let anim = button.animate([
-                                        { transform: 'translateZ(0) rotateX(0deg)' },
-                                        { transform: 'translateZ(200px) rotateX(-90deg)' },
-                                    ], {
-                                            duration: 500,
-                                            iterations: 1,
-                                            direction: 'alternate',
-                                            fill: 'forwards',
-                                        });
-
-                                    anim.onfinish = () => {
-                                        if (isFollow) {
-                                            button.innerHTML = 'Unfollow';
-                                        } else {
-                                            button.innerHTML = 'Follow';
-                                        }
-
-                                        button.animate([
-                                            { transform: 'translateZ(200px) rotateX(90deg)' },
-                                            { transform: 'translateZ(0) rotateX(0deg)' },
-                                        ],
-                                            {
-                                                duration: 500,
-                                                iterations: 1,
-                                                direction: 'alternate',
-                                                fill: 'forwards',
-                                            });
-                                    };
-                                });
-                            } else {
-                                resp.json().then((errorLog) => {
-                                    console.log(errorLog);
-                                });
-                            }
-                        })
-                });
-            });
-        </script> {% endif %} {% block javascript %}{% endblock %}
+            var PATH_POSTS = "{{ path('blog_posts') }}";
+            var PATH_FOLLOW = "{{ path('user_follow') }}";
+        </script>
+        <script src="{{ asset('script/main.js') }}"></script> {% endif %} {% block javascript %}{% endblock %}
     </body>
 
 </html>
